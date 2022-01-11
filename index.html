@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<body>
+    <div id="root"></div>
+</body>
+<script src="https://unpkg.com/react@17.0.2/umd/react.production.min.js"></script>
+<script src="https://unpkg.com/react-dom@17.0.2/umd/react-dom.production.min.js"></script>
+<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+<script type="text/babel">
+    const Default = () => {
+        return (<div>Choose converter from above selector!</div>);
+    };
+    const KmAndMile = () => {
+        const [dist, setDist] = React.useState(0);
+        const [inverted, setInverted] = React.useState(false);
+        const onChange = (e) => { setDist(e.target.value); };
+        const reset = () => { setDist(0); };
+        const invert = () => {
+            reset();
+            setInverted(!inverted);
+        };
+
+        return (
+            <div>
+                <h3 class="title">{inverted ? "mi to km" : "km to mi"}</h3>
+                <div>
+                    <label htmlFor="km">km: </label>
+                    <input value={inverted ? Math.round(dist / .621371) : dist} id="km" type="number" placeholder="km" onChange={onChange} disabled={inverted} />
+                </div>
+                <div>
+                    <label htmlFor="mi">mi: </label>
+                    <input value={inverted ? dist : Math.round(dist * 0.621371)} id="mi" type="number" placeholder="mi" onChange={onChange} disabled={!inverted} />
+                </div>
+                <button id="reset" onClick={reset}>Reset</button>
+                <button id="invert" onClick={invert}>Invert</button>
+            </div>
+        );
+    }
+    const MinutesAndHours = () => {
+        const [time, setTime] = React.useState(0);
+        const [inverted, setInverted] = React.useState(false);
+        const onChange = (e) => { setTime(e.target.value); };
+        const reset = () => { setTime(0); };
+        const invert = () => {
+            reset();
+            setInverted(!inverted);
+        };
+
+        return (
+            <div>
+                <h3 class="title">{inverted ? "Minutes to Hours" : "Hours to Minutes"}</h3>
+                <div>
+                    <label htmlFor="minutes">Minutes: </label>
+                    <input value={inverted ? time * 60 : time} id="minutes" type="number" placeholder="minutes" onChange={onChange} disabled={inverted} />
+                </div>
+                <div>
+                    <label htmlFor="hours">Hours: </label>
+                    <input value={inverted ? time : Math.round(time / 60)} id="hours" type="number" placeholder="hours" onChange={onChange} disabled={!inverted} />
+                </div>
+                <button id="reset" onClick={reset}>Reset</button>
+                <button id="invert" onClick={invert}>Invert</button>
+            </div>
+        );
+    }
+
+    const App = () => {
+        const [index, setIndex] = React.useState('-1');
+        const onSelect = (e) => {
+            setIndex(e.target.value);
+        }
+
+        return (
+            <div>
+                <h1>Unit Converter</h1>
+                <select onChange={onSelect}>
+                    <option value="-1">Select Converter</option>
+                    <option value="0">Minutes & Hours</option>
+                    <option value="1">km & mi</option>
+                </select>
+                <hr />
+                <div>
+                    {index === "-1" ? <Default /> : null}
+                    {index === "0" ? <MinutesAndHours /> : null}
+                    {index === "1" ? <KmAndMile /> : null}
+                    {
+                        // 이 부분을 더 최적화할 수 없어 킹받는다... 일단은 힘이 약하니 넘어가자.
+                    }
+                </div>
+            </div>
+        );
+    }
+
+    const root = document.getElementById("root");
+    ReactDOM.render(<App />, root)
+</script>
+
+</html>
