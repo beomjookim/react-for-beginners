@@ -1,3 +1,5 @@
+// part of react app
+
 import {useState, useEffect} from 'react'
 
 function App() {
